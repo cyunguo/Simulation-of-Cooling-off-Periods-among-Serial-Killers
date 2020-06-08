@@ -1,0 +1,94 @@
+---
+title: '1'
+author: "Yunguo Cai"
+date: "6/7/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(dplyr)
+library(ggpubr)
+```
+
+```{r}
+a = c(93.421, 92.260, 91.199, 95.354, 81.299, 94.028, 88.149, 94.796, 100.485, 87.099)
+b = c(92.9343, 84.3904, 89.9264, 91.7398, 98.9795, 92.5008, 86.9436, 85.4199, 87.5312, 97.9665)
+c = c(77.6438, 89.9264, 82.9126, 87.7585, 81.0119, 85.7708, 80.3672, 77.7725, 84.5615)
+hist(a,xlab = "10",col = "yellow",border = "blue")
+hist(b,xlab = "100",col = "yellow",border = "blue")
+hist(c,xlab = "1000",col = "yellow",border = "blue")
+my_data <- data.frame( 
+                group = rep(c("10", "100"), each = 10),
+                runtime = c(a,  b)
+                )
+group_by(my_data, group) %>%
+  summarise(
+    count = n(),
+    mean = mean(runtime, na.rm = TRUE),
+    sd = sd(runtime, na.rm = TRUE)
+  )
+# Shapiro-Wilk normality test 
+with(my_data, shapiro.test(runtime[group == "10"]))
+with(my_data, shapiro.test(runtime[group == "100"])) 
+shapiro.test(c)
+ggboxplot(my_data, x = "group", y = "runtime", 
+          color = "group", palette = c("#00AFBB", "#E7B800"),
+        ylab = "Run time(s)", xlab = "Groups", add = "mean")
+res <- t.test(a, b, var.equal = TRUE)
+res
+res.ftest <- var.test(runtime ~ group, data = my_data)
+res.ftest
+```
+```{r}
+a = c(93.421, 92.260, 91.199, 95.354, 81.299, 94.028, 88.149, 94.796, 100.485, 87.099)
+b = c(92.9343, 84.3904, 89.9264, 91.7398, 98.9795, 92.5008, 86.9436, 85.4199, 87.5312, 97.9665)
+c = c(77.6438, 89.9264, 82.9126, 87.7585, 81.0119, 85.7708, 85.5798, 80.3672, 77.7725, 84.5615)
+my_data_1 <- data.frame( 
+                group = rep(c("10", "1000"), each = 10),
+                runtime = c(a,  c)
+                )
+group_by(my_data_1, group) %>%
+  summarise(
+    count = n(),
+    mean = mean(runtime, na.rm = TRUE),
+    sd = sd(runtime, na.rm = TRUE)
+  )
+
+ggboxplot(my_data_1, x = "group", y = "runtime", 
+          color = "group", palette = c("#00AFBB", "#E7B800"),
+        ylab = "Run time(s)", xlab = "Groups", add = "mean")
+res_1 <- t.test(a, c, var.equal = TRUE)
+res_1
+res1.ftest <- var.test(runtime ~ group, data = my_data_1)
+res1.ftest
+```
+
+
+
+```{r}
+a = c(93.421, 92.260, 91.199, 95.354, 81.299, 94.028, 88.149, 94.796, 100.485, 87.099)
+b = c(92.9343, 84.3904, 89.9264, 91.7398, 98.9795, 92.5008, 86.9436, 85.4199, 87.5312, 97.9665)
+c = c(77.6438, 89.9264, 82.9126, 87.7585, 81.0119, 85.7708, 85.5798, 80.3672, 77.7725, 84.5615)
+my_data_2 <- data.frame( 
+                group = rep(c("100", "1000"), each = 10),
+                runtime = c(b,  c)
+                )
+group_by(my_data_2, group) %>%
+  summarise(
+    count = n(),
+    mean = mean(runtime, na.rm = TRUE),
+    sd = sd(runtime, na.rm = TRUE)
+  )
+
+ggboxplot(my_data_2, x = "group", y = "runtime", 
+          color = "group", palette = c("#00AFBB", "#E7B800"),
+        ylab = "Run time(s)", xlab = "Groups")
+res_2 <- t.test(b, c, var.equal = TRUE)
+res_2
+res2.ftest <- var.test(runtime ~ group, data = my_data_2)
+res2.ftest
+```

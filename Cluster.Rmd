@@ -1,0 +1,117 @@
+---
+title: "Untitled"
+author: "Yunguo Cai"
+date: "5/17/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(MASS)
+library(xtable)
+library(mlogit) 
+library(VGAM)
+library(nnet)
+library(psych)
+library(Gifi)
+library(GPArotation)
+library(som)
+library(dplyr)
+library(cluster)
+```
+
+```{r}
+#real
+a = read.csv("r1.csv",header=TRUE)
+a = a[,-1]
+#aa = read.csv("first5_1.csv",header=FALSE)
+k1=kmeans(a,center=4)
+table(k1$cluster)
+print(k1$cluster)
+summary(k1)
+summary(k1)
+ggplot()+geom_point(aes(x=a[,2],y=a[,3],col=as.factor(k1$cluster)))
+ggplot()+geom_point(aes(x=a[,3],y=a[,4],col=as.factor(k1$cluster)))
+ggplot()+geom_point(aes(x=a[,2],y=a[,4],col=as.factor(k1$cluster)))
+```
+
+```{r}
+#simulation
+s = read.csv("datay_N.csv",header=T)
+s = s[,-1]
+#aa = read.csv("first5_1.csv",header=FALSE)
+k2=kmeans(s,center=5)
+table(k2$cluster)
+print(k2$cluster)
+ggplot()+geom_point(aes(x=s[,2],y=s[,3],col=as.factor(k2$cluster)))
+ggplot()+geom_point(aes(x=s[,3],y=s[,4],col=as.factor(k2$cluster)))
+ggplot()+geom_point(aes(x=s[,2],y=s[,4],col=as.factor(k2$cluster)))
+for (i in 1:length(k2$cluster)){
+  print(c(i,k2$cluster[i]))
+}
+```
+
+```{r}
+#simulation
+s1 = read.csv("datayy2_N.csv",header=T)
+s1 = s1[,-1]
+#aa = read.csv("first5_1.csv",header=FALSE)
+k22=kmeans(s1,center=5)
+table(k22$cluster)
+print(k22$cluster)
+ggplot()+geom_point(aes(x=s1[,2],y=s1[,3],col=as.factor(k22$cluster)))
+ggplot()+geom_point(aes(x=s1[,3],y=s1[,4],col=as.factor(k22$cluster)))
+ggplot()+geom_point(aes(x=s1[,2],y=s1[,4],col=as.factor(k22$cluster)))
+for (i in 1:length(k22$cluster)){
+  print(c(i,k22$cluster[i]))
+}
+```
+
+
+
+```{r}
+d<-dist(a, method = "euclidean")
+fit <- hclust(d, method= "complete")
+summary(fit)
+plot(fit,plot=NULL,main="Cluster Analysis: Complete Linkage",xlab="Complete linkage")
+```
+```{r}
+b = read.csv("f5.csv", header = TRUE)
+bb = b[,-1]
+k2=kmeans(bb,center=3)
+table(k2$cluster)
+print(k2$cluster)
+summary(k2)
+ggplot()+geom_point(aes(x=bb[,2],y=bb[,3],col=as.factor(k2$cluster)))
+ggplot()+geom_point(aes(x=bb[,3],y=bb[,4],col=as.factor(k2$cluster)))
+ggplot()+geom_point(aes(x=bb[,2],y=bb[,4],col=as.factor(k2$cluster)))
+```
+
+```{r}
+d2<-dist(bb, method = "euclidean")
+fit2 <- hclust(d2, method= "complete")
+summary(fit2)
+plot(fit2,plot=NULL,main="Cluster Analysis: Single Linkage",xlab="Single linkage")
+groups2 <- cutree(fit2, k=3) 
+rect.hclust(fit2, k=3, border="purple")
+cl<-as.data.frame(cbind(bb,groups2))
+cl[1:5,]
+```
+```{r}
+c = read.csv("num2.csv",header=FALSE)
+cc =  c[,3:6]
+cc_norm = normalize(cc)
+k3=kmeans(cc_norm,center=3)
+table(k3$cluster)
+print(k3$cluster)
+summary(k3)
+```
+
+
+
+
+
